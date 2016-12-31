@@ -12,6 +12,9 @@ resource "aws_vpc" "remote" {
   provider   = "aws.remote_provider"
   count      = "${var.remote_region == "none" ? 0 : 1}"
 
+  enable_dns_support   = "true"
+  enable_dns_hostnames = "true"
+
   tags {
     Name = "Remote Puppet VPC"
   }
