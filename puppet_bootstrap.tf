@@ -77,7 +77,7 @@ resource "aws_launch_configuration" "bootstrap" {
 # Uppgrade existing packages, and install Git & GPG
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
-DEBIAN_FRONTEND=noninteractive apt-get install -y awscli git gnupg gnupg-curl
+DEBIAN_FRONTEND=noninteractive apt-get install -y git gnupg gnupg-curl
 
 # Fetch the bootstrap signing key
 sudo -u ubuntu gpg --keyserver keys.gnupg.net --recv-keys FC411D5BA332BE922D2CE7F1A2BF8503E5E5AFC8
