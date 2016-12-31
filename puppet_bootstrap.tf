@@ -114,5 +114,10 @@ resource "aws_autoscaling_group" "Bootstrap" {
       value               = "Bootstrap"
       propagate_at_launch = "true"
     },
+    {
+      key                 = "NFS"
+      value               = "${aws_efs_file_system.bootstrap.id}"
+      propagate_at_launch = "true"
+    },
   ]
 }

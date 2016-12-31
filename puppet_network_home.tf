@@ -213,6 +213,39 @@ resource "aws_security_group" "home_ca" {
   }
 }
 
+resource "aws_security_group" "home_nfs_bootstrap" {
+  name        = "puppet_nfs_bootstrap"
+  description = "Allow NFS access to bootstrap data"
+  vpc_id      = "${aws_vpc.home.id}"
+
+  # Allow NFS access from the Bastion security group
+  ingress {
+    from_port = 2049
+    to_port   = 2049
+    protocol  = "tcp"
+    security_groups = [
+      "${aws_security_group.home_bastion.id}"
+    ]
+  }
+}
+
+resource "aws_security_group" "home_nfs_ca" {
+  name        = "puppet_nfs_ca"
+  description = "Allow NFS access to CA data"
+  vpc_id      = "${aws_vpc.home.id}"
+
+  # Allow NFS access from the CA and Bastion security groups
+  ingress {
+    from_port = 2049
+    to_port   = 2049
+    protocol  = "tcp"
+    security_groups = [
+      "${aws_security_group.home_ca.id}",
+      "${aws_security_group.home_bastion.id}"
+    ]
+  }
+}
+
 resource "aws_security_group" "home_puppet" {
   name        = "puppet_group"
   description = "Puppet server security group"
