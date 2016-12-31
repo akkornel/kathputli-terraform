@@ -154,7 +154,7 @@ resource "aws_security_group" "home_bastion" {
   }
 
   ingress {
-    from_port   = 0
+    from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = [ "0.0.0.0/0" ]
@@ -185,7 +185,7 @@ resource "aws_security_group" "home_puppet" {
   }
 
   ingress {
-    from_port   = 0
+    from_port   = 8140
     to_port     = 8140
     protocol    = "tcp"
     cidr_blocks = [ "0.0.0.0/0" ]
@@ -194,7 +194,7 @@ resource "aws_security_group" "home_puppet" {
   # Allow SSH from the bastion systems
 
   ingress {
-    from_port       = 0
+    from_port       = 22
     to_port         = 22
     protocol        = "tcp"
     security_groups = [ "${aws_security_group.home_bastion.id}" ]
