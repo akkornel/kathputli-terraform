@@ -24,3 +24,8 @@ variable "bucket_prefix" {
   type        = "string"
   description = "A prefix for the S3 bucket(s) created to hold configuration."
 }
+
+variable "ssh_key" {
+  type        = "string"
+  description = "The SSH public key to use for SSHing into EC2 instances."
+}
