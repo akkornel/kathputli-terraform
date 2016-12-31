@@ -173,6 +173,46 @@ resource "aws_security_group" "home_bastion" {
   }
 }
 
+resource "aws_security_group" "home_ca" {
+  name        = "ca_group"
+  description = "Puppet CA security group"
+  vpc_id      = "${aws_vpc.home.id}"
+
+  # Allow ping and Puppet web from anywhere
+
+  ingress {
+    from_port   = 8
+    to_port     = 8
+    protocol    = "icmp"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+  ingress {
+    from_port   = 8140
+    to_port     = 8140
+    protocol    = "tcp"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+  # Allow SSH from the bastion systems
+
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [ "${aws_security_group.home_bastion.id}" ]
+  }
+
+  # Allow outgoing to anywhere
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+}
+
 resource "aws_security_group" "home_puppet" {
   name        = "puppet_group"
   description = "Puppet server security group"
