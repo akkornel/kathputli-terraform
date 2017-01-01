@@ -4,6 +4,11 @@
 # CLIENT-SET VARIABLES
 #
 
+variable "admin_email" {
+  type        = "string"
+  description = "The administrator's email addess"
+}
+
 variable "home_region" {
   type        = "string"
   description = "The home region, where most of the work is done"
