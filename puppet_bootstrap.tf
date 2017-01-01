@@ -115,6 +115,21 @@ resource "aws_autoscaling_group" "Bootstrap" {
       propagate_at_launch = "true"
     },
     {
+      key                 = "Admin"
+      value               = "${var.admin_email}"
+      propagate_at_launch = "true"
+    },
+    {
+      key                 = "Buckets"
+      value               = "${aws_s3_bucket.puppet_config_home.bucket}:${var.remote_region == "none" ? "none" : aws_s3_bucket.puppet_config_remote.bucket}"
+      propagate_at_launch = "true"
+    },
+    {
+      key                 = "DNS"
+      value               = "${aws_route53_zone.puppet_zone.id}"
+      propagate_at_launch = "true"
+    },
+    {
       key                 = "NFS"
       value               = "${aws_efs_file_system.bootstrap.id}"
       propagate_at_launch = "true"
