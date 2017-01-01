@@ -53,7 +53,7 @@ resource "aws_subnet" "home_master1" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}a"
   
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 0)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 0)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -70,7 +70,7 @@ resource "aws_subnet" "home_master2" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}b"
   
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 1)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 1)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -87,7 +87,7 @@ resource "aws_subnet" "home_master3" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}c"
   
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 2)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 2)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -106,7 +106,7 @@ resource "aws_subnet" "home_misc1" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}a"
 
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 3)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 3)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -125,7 +125,7 @@ resource "aws_subnet" "ca1" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}b"
 
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 4)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 4)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -142,7 +142,7 @@ resource "aws_subnet" "ca2" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}c"
 
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 5)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 5)}"
   map_public_ip_on_launch = "true"
 
   tags {

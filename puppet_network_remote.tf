@@ -62,7 +62,7 @@ resource "aws_subnet" "remote_master1" {
   vpc_id            = "${aws_vpc.remote.id}"
   availability_zone = "${var.remote_region}a"
   
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 0)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 0)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -85,7 +85,7 @@ resource "aws_subnet" "remote_master2" {
   vpc_id            = "${aws_vpc.remote.id}"
   availability_zone = "${var.remote_region}b"
 
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 1)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 1)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -108,7 +108,7 @@ resource "aws_subnet" "remote_master3" {
   vpc_id            = "${aws_vpc.remote.id}"
   availability_zone = "${var.remote_region}c"
   
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 2)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 2)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -132,7 +132,7 @@ resource "aws_subnet" "remote_misc1" {
   availability_zone = "${var.remote_region}a"
   count             = "${var.remote_region == "none" ? 0 : 1}"
 
-  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 5)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 5)}"
   map_public_ip_on_launch = "true"
 
   tags {
