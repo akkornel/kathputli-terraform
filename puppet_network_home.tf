@@ -100,13 +100,32 @@ resource "aws_route_table_association" "home_master3" {
   route_table_id = "${aws_route_table.home.id}"
 }
 
-# Create one subnet for our CA.
+# Create one subnet for misc. systems.
 
-resource "aws_subnet" "ca1" {
+resource "aws_subnet" "home_misc1" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}a"
 
   cidr_block = "10.1.0.96/27"
+  map_public_ip_on_launch = "true"
+
+  tags {
+    Name = "Misc. Subnet"
+  }
+}
+
+resource "aws_route_table_association" "home_misc1" {
+  subnet_id      = "${aws_subnet.home_misc1.id}"
+  route_table_id = "${aws_route_table.home.id}"
+}
+
+# Create two subnets for our CA.
+
+resource "aws_subnet" "ca1" {
+  vpc_id = "${aws_vpc.home.id}"
+  availability_zone = "${var.home_region}b"
+
+  cidr_block = "10.1.0.128/27"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -119,22 +138,20 @@ resource "aws_route_table_association" "ca1" {
   route_table_id = "${aws_route_table.home.id}"
 }
 
-# Create one subnet for misc. systems.
-
-resource "aws_subnet" "home_misc1" {
+resource "aws_subnet" "ca2" {
   vpc_id = "${aws_vpc.home.id}"
-  availability_zone = "${var.home_region}a"
+  availability_zone = "${var.home_region}c"
 
-  cidr_block = "10.1.0.128/27"
+  cidr_block = "10.1.0.160/27"
   map_public_ip_on_launch = "true"
 
   tags {
-    Name = "Misc. Subnet"
+    Name = "CA Subnet"
   }
 }
 
-resource "aws_route_table_association" "home_misc1" {
-  subnet_id      = "${aws_subnet.home_misc1.id}"
+resource "aws_route_table_association" "ca2" {
+  subnet_id      = "${aws_subnet.ca2.id}"
   route_table_id = "${aws_route_table.home.id}"
 }
 

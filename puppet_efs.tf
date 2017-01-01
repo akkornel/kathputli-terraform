@@ -21,6 +21,12 @@ resource "aws_efs_mount_target" "ca1" {
   security_groups = [ "${aws_security_group.home_nfs_ca.id}" ]
 }
 
+resource "aws_efs_mount_target" "ca2" {
+  file_system_id = "${aws_efs_file_system.ca.id}"
+  subnet_id      = "${aws_subnet.ca2.id}"
+  security_groups = [ "${aws_security_group.home_nfs_ca.id}" ]
+}
+
 #
 # BOOTSTRAP STORAGE
 #
