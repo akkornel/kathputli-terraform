@@ -9,6 +9,12 @@ variable "admin_email" {
   description = "The administrator's email addess"
 }
 
+variable "vpc_cidr" {
+  type        = "string"
+  description = "The IPv4 network to use for the VPC, in CIDR notation.  The network must be a /24 network, meaning the last octet will always be zero."
+  default     = "10.1.0.0/24"
+}
+
 variable "home_region" {
   type        = "string"
   description = "The home region, where most of the work is done"

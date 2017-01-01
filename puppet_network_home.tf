@@ -8,7 +8,7 @@
 # Create our home VPC
 
 resource "aws_vpc" "home" {
-  cidr_block = "10.1.0.0/24"
+  cidr_block = "${var.vpc_cidr}"
 
   enable_dns_support   = "true"
   enable_dns_hostnames = "true"
@@ -53,7 +53,7 @@ resource "aws_subnet" "home_master1" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}a"
   
-  cidr_block = "10.1.0.0/27"
+  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 0)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -70,7 +70,7 @@ resource "aws_subnet" "home_master2" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}b"
   
-  cidr_block = "10.1.0.32/27"
+  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 1)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -87,7 +87,7 @@ resource "aws_subnet" "home_master3" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}c"
   
-  cidr_block = "10.1.0.64/27"
+  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 2)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -106,7 +106,7 @@ resource "aws_subnet" "home_misc1" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}a"
 
-  cidr_block = "10.1.0.96/27"
+  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 3)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -125,7 +125,7 @@ resource "aws_subnet" "ca1" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}b"
 
-  cidr_block = "10.1.0.128/27"
+  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 4)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -142,7 +142,7 @@ resource "aws_subnet" "ca2" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}c"
 
-  cidr_block = "10.1.0.160/27"
+  cidr_block = "${cidrsubnet(var.cidr_subnet, 3, 5)}"
   map_public_ip_on_launch = "true"
 
   tags {
