@@ -156,7 +156,7 @@ resource "aws_security_group" "remote_bastion" {
   provider   = "aws.remote_provider"
   count      = "${var.remote_region == "none" ? 0 : 1}"
 
-  name        = "bastion_group"
+  name_prefix = "bastion_group"
   description = "Remote Bastion host security group"
   vpc_id      = "${aws_vpc.remote.id}"
 
@@ -190,7 +190,7 @@ resource "aws_security_group" "remote_puppet" {
   provider   = "aws.remote_provider"
   count      = "${var.remote_region == "none" ? 0 : 1}"
 
-  name        = "puppet_group"
+  name_prefix = "puppet_group"
   description = "Remote Puppet server security group"
   vpc_id      = "${aws_vpc.remote.id}"
 

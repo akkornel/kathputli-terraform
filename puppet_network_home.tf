@@ -160,7 +160,7 @@ resource "aws_route_table_association" "ca2" {
 #
 
 resource "aws_security_group" "home_bastion" {
-  name        = "bastion_group"
+  name_prefix = "bastion_group"
   description = "Bastion host security group"
   vpc_id      = "${aws_vpc.home.id}"
 
@@ -191,7 +191,7 @@ resource "aws_security_group" "home_bastion" {
 }
 
 resource "aws_security_group" "home_ca" {
-  name        = "ca_group"
+  name_prefix = "ca_group"
   description = "Puppet CA security group"
   vpc_id      = "${aws_vpc.home.id}"
 
@@ -231,7 +231,7 @@ resource "aws_security_group" "home_ca" {
 }
 
 resource "aws_security_group" "home_nfs_bootstrap" {
-  name        = "puppet_nfs_bootstrap"
+  name_prefix = "puppet_nfs_bootstrap"
   description = "Allow NFS access to bootstrap data"
   vpc_id      = "${aws_vpc.home.id}"
 
@@ -247,7 +247,7 @@ resource "aws_security_group" "home_nfs_bootstrap" {
 }
 
 resource "aws_security_group" "home_nfs_ca" {
-  name        = "puppet_nfs_ca"
+  name_prefix = "puppet_nfs_ca"
   description = "Allow NFS access to CA data"
   vpc_id      = "${aws_vpc.home.id}"
 
@@ -264,7 +264,7 @@ resource "aws_security_group" "home_nfs_ca" {
 }
 
 resource "aws_security_group" "home_puppet" {
-  name        = "puppet_group"
+  name_prefix = "puppet_group"
   description = "Puppet server security group"
   vpc_id      = "${aws_vpc.home.id}"
 
