@@ -16,7 +16,7 @@ variable "home_region" {
 
 variable "remote_region" {
   type        = "string"
-  description = "An optional second region for additional resiliency"
+  description = "An optional second region for additional resiliency.  To disable, set to 'none'."
   default     = "none"
 }
 
