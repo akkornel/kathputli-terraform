@@ -125,7 +125,10 @@ resource "aws_autoscaling_group" "Bootstrap" {
   force_delete = "true"
 
   launch_configuration = "${aws_launch_configuration.bootstrap.id}"
-  vpc_zone_identifier  = [ "${aws_subnet.home_misc1.id}" ]
+  vpc_zone_identifier  = [
+    "${aws_subnet.home_misc1.id}",
+    "${aws_subnet.home_misc2.id}",
+  ]
 
   health_check_type         = "EC2"
   health_check_grace_period = "300"

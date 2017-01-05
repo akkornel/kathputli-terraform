@@ -100,7 +100,7 @@ resource "aws_route_table_association" "home_master3" {
   route_table_id = "${aws_route_table.home.id}"
 }
 
-# Create one subnet for misc. systems.
+# Create two subnets for misc. systems.
 
 resource "aws_subnet" "home_misc1" {
   vpc_id = "${aws_vpc.home.id}"
@@ -119,13 +119,30 @@ resource "aws_route_table_association" "home_misc1" {
   route_table_id = "${aws_route_table.home.id}"
 }
 
+resource "aws_subnet" "home_misc2" {
+  vpc_id = "${aws_vpc.home.id}"
+  availability_zone = "${var.home_region}b"
+
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 4)}"
+  map_public_ip_on_launch = "true"
+
+  tags {
+    Name = "Misc. Subnet"
+  }
+}
+
+resource "aws_route_table_association" "home_misc2" {
+  subnet_id      = "${aws_subnet.home_misc2.id}"
+  route_table_id = "${aws_route_table.home.id}"
+}
+
 # Create two subnets for our CA.
 
 resource "aws_subnet" "ca1" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}b"
 
-  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 4)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 5)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -142,7 +159,7 @@ resource "aws_subnet" "ca2" {
   vpc_id = "${aws_vpc.home.id}"
   availability_zone = "${var.home_region}c"
 
-  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 5)}"
+  cidr_block = "${cidrsubnet(var.vpc_cidr, 3, 6)}"
   map_public_ip_on_launch = "true"
 
   tags {
@@ -154,6 +171,8 @@ resource "aws_route_table_association" "ca2" {
   subnet_id      = "${aws_subnet.ca2.id}"
   route_table_id = "${aws_route_table.home.id}"
 }
+
+# BTW, there is one /27 left in this VPC!
 
 #
 # SECURITY GROUPS
