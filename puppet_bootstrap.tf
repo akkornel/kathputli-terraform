@@ -121,7 +121,7 @@ resource "aws_autoscaling_group" "Bootstrap" {
     },
     {
       key                 = "Buckets"
-      value               = "${aws_s3_bucket.puppet_config_home.bucket}:${var.remote_region == "none" ? "none" : aws_s3_bucket.puppet_config_remote.bucket}"
+      value               = "${aws_s3_bucket.puppet_config_home.bucket}:${var.remote_region == "none" ?  "none" : "${var.bucket_prefix}-config-remote"}"
       propagate_at_launch = "true"
     },
     {
