@@ -26,7 +26,7 @@ EOF
 
 # Attach a policy to the role, allowing everything.
 resource "aws_iam_role_policy" "bootstrap" {
-  name_prefix = "Bootstrap"
+  name        = "Bootstrap"
   role        = "${aws_iam_role.bootstrap.id}"
   policy = <<EOF
 {
