@@ -51,6 +51,12 @@ resource "aws_iam_instance_profile" "bootstrap" {
   ]
 }
 
+# Next up comes auto-scaling configuration.
+# This is the safest, and the default, way of maintaining your bootstrap server:
+# An auto-scaling group is used to keep one bootstrap server running.
+# There are two possible subnets, each in a different AZ, so that if something
+# knocks out an entire AZ, a bootstrap server can be spun up in another AZ.
+
 # Create a bootstrap configuration.
 # This config defines an Ubuntu Xenial system, to which we fetch, verify, and 
 # run a script that performs the remaining bootstrap tasks.
