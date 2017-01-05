@@ -1,7 +1,11 @@
 # vim: ts=2 sw=2 et
 
-# Create a role for the bootstrap system, and link the role to the policy.
+# This file contains the stuff to create the bootstrap instance.
+# The bootstrap instance is the system which does some of the more-compilcated 
+# systems setup, and which handles many of the priviledged operations.
 
+# Create an IAM Role, which allows an EC2 instance to assume the role, and its 
+# attached/embedded policies.
 resource "aws_iam_role" "bootstrap" {
   name_prefix        = "Bootstrap"
   assume_role_policy = <<EOF
@@ -40,7 +44,6 @@ EOF
 
 # Create an instance profile containing our role, so that it can be attached to 
 # EC2 instances.
-
 resource "aws_iam_instance_profile" "bootstrap" {
   name = "Bootstrap"
   roles = [
@@ -51,7 +54,6 @@ resource "aws_iam_instance_profile" "bootstrap" {
 # Create a bootstrap configuration.
 # This config defines an Ubuntu Xenial system, to which we fetch, verify, and 
 # run a script that performs the remaining bootstrap tasks.
-
 resource "aws_launch_configuration" "bootstrap" {
   name              = "Bootstrap"
   instance_type     = "t2.small"
@@ -116,7 +118,6 @@ EOF
 }
 
 # Create an auto-scaling group to maintain one bootstrap server
-
 resource "aws_autoscaling_group" "Bootstrap" {
   name         = "Bootstrap"
   min_size     = "1"
