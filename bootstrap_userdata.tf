@@ -4,32 +4,39 @@
 # bootstrap systems.  It has been moved to a separate file to keep things 
 # looking cleaner.  It also makes modifications much easier to notice!
 
-variable "bootstrap_userdata" {
-  type = "string"
-  description = "This is the user-data sent to newly-created bootstrap systems."
-  default     = <<ENDUSERDATA
+data "template_file" "bootstrap_user_data" {
+  vars {
+    admin_email   = "${var.admin_email}"
+    home_bucket   = "${aws_s3_bucket.puppet_config_home.bucket}"
+    remote_bucket = "${var.remote_region == "none" ? "none" : "${var.bucket_prefix}"}"
+    dns_name      = "${var.domain}"
+    dns_id        = "${aws_route53_zone.puppet_zone.id}"
+    efs_id        = "${aws_efs_file_system.bootstrap.id}"
+  }
+
+  template = <<ENDUSERDATA
 #!/bin/bash
 
 # Create files with info on our config
 cat - <<EOF > /etc/kathputli-bootstrap.json
 {
-  "admin_email": "${var.admin_email}",
-  "home_bucket": "${aws_s3_bucket.puppet_config_home.bucket}",
-  "remote_bucket": "${var.remote_region == "none" ?  "none" : "${var.bucket_prefix}-config-remote"}",
+  "admin_email": "$${admin_email}",
+  "home_bucket": "$${home_bucket}",
+  "remote_bucket": "$${remote_bucket}",
   "dns_zone": {
-    "id": "${aws_route53_zone.puppet_zone.id}",
-    "name": "${vars.domain}",
+    "id": "$${dns_id}",
+    "name": "$${dns_name}",
   },
-  "efs_id": "${aws_efs_file_system.bootstrap.id}"
+  "efs_id": "$${efs_id}"
 }
 EOF
 cat - <<EOF > /etc/kathputli-bootstrap.sh
-ADMIN_EMAIL="${var.admin_email}"
-HOME_BUCKET="${aws_s3_bucket.puppet_config_home.bucket}"
-REMOTE_BUCKET="${var.remote_region == "none" ?  "none" : "${var.bucket_prefix}-config-remote"}"
-DNS_ZONE_ID="${aws_route53_zone.puppet_zone.id}"
-DNS_ZONE_NAME="${vars.domain}"
-EFS_ID="${aws_efs_file_system.bootstrap.id}"
+ADMIN_EMAIL="$${admin_email}"
+HOME_BUCKET="$${home_bucket}"
+REMOTE_BUCKET="$${remote_bucket}"
+DNS_ZONE_ID="$${dns_id}"
+DNS_ZONE_NAME="$${dns_name}"
+EFS_ID="$${efs_id}"
 EOF
 
 # Uppgrade existing packages, and install Git & GPG

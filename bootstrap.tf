@@ -72,7 +72,7 @@ resource "aws_launch_configuration" "bootstrap" {
     delete_on_termination = "true"
   }
 
-  user_data = "${vars.bootstrap_user_data}"
+  user_data = "${data.template_file.bootstrap_user_data.rendered}"
 }
 
 # Create an auto-scaling group to maintain one bootstrap server
