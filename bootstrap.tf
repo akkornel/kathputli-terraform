@@ -74,6 +74,28 @@ resource "aws_launch_configuration" "bootstrap" {
   user_data = <<EOF
 #!/bin/bash
 
+# Create files with info on our config
+cat - <<EOF > /etc/kathputli-bootstrap.json
+{
+  "admin_email": "${var.admin_email}",
+  "home_bucket": "${aws_s3_bucket.puppet_config_home.bucket}",
+  "remote_bucket": "${var.remote_region == "none" ?  "none" : "${var.bucket_prefix}-config-remote"}",
+  "dns_zone": {
+    "id": "${aws_route53_zone.puppet_zone.id}",
+    "name": "${vars.domain}",
+  },
+  "efs_id": "${aws_efs_file_system.bootstrap.id}"
+}
+EOF
+cat - <<EOF > /etc/kathputli-bootstrap.sh
+ADMIN_EMAIL="${var.admin_email}"
+HOME_BUCKET="${aws_s3_bucket.puppet_config_home.bucket}"
+REMOTE_BUCKET="${var.remote_region == "none" ?  "none" : "${var.bucket_prefix}-config-remote"}"
+DNS_ZONE_ID="${aws_route53_zone.puppet_zone.id}"
+DNS_ZONE_NAME="${vars.domain}"
+EFS_ID="${aws_efs_file_system.bootstrap.id}"
+EOF
+
 # Uppgrade existing packages, and install Git & GPG
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
@@ -112,26 +134,6 @@ resource "aws_autoscaling_group" "Bootstrap" {
     {
       key                 = "Type"
       value               = "Bootstrap"
-      propagate_at_launch = "true"
-    },
-    {
-      key                 = "Admin"
-      value               = "${var.admin_email}"
-      propagate_at_launch = "true"
-    },
-    {
-      key                 = "Buckets"
-      value               = "${aws_s3_bucket.puppet_config_home.bucket}:${var.remote_region == "none" ?  "none" : "${var.bucket_prefix}-config-remote"}"
-      propagate_at_launch = "true"
-    },
-    {
-      key                 = "DNS"
-      value               = "${aws_route53_zone.puppet_zone.id}"
-      propagate_at_launch = "true"
-    },
-    {
-      key                 = "NFS"
-      value               = "${aws_efs_file_system.bootstrap.id}"
       propagate_at_launch = "true"
     },
   ]
