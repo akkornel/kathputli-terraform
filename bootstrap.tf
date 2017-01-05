@@ -104,4 +104,79 @@ resource "aws_autoscaling_group" "bootstrap" {
       propagate_at_launch = "true"
     },
   ]
+
+  depends_on = [
+    "aws_efs_mount_target.bootstrap1",
+    "aws_efs_mount_target.bootstrap2"
+  ]
+}
+
+#
+#
+#
+
+# Create a role for the Spot Fleet service to assume.
+resource "aws_iam_role" "bootstrap_fleet" {
+  name_prefix        = "Bootstrap"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "spotfleet.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+# As part of the role, allow the Spoot Fleet service to have access according
+# to EC2's standard spot fleet policy.
+resource "aws_iam_role_policy_attachment" "bootstrap_fleet" {
+  role       = "${aws_iam_role.bootstrap_fleet.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2SpotFleetRole"
+}
+
+# Create a Spot fleet to maintain one bootstrap server
+resource "aws_spot_fleet_request" "bootstrap" {
+  count = "${var.bootstrap_spot == "true" ? 1 : 0}"
+
+  iam_fleet_role = "${aws_iam_role.bootstrap_fleet.arn}"
+
+  target_capacity = 1
+  spot_price      = "${var.bootstrap_spot_price}"
+  valid_until     = "${var.bootstrap_spot_expiration}"
+
+# Once fixed, will later need to add m3.large,r3.large,r4.large,c3.large
+# Also subnet ${aws_subnet.home_misc2.id}
+  launch_specification {
+    instance_type     = "m3.medium"
+    ami               = "${var.bootstrap_ami[var.home_region]}"
+    monitoring        = "false"
+
+    key_name                    = "${aws_key_pair.admin_home.id}"
+#    associate_public_ip_address = "true"
+    vpc_security_group_ids      = [ "${aws_security_group.home_bastion.id}" ]
+    iam_instance_profile        = "${aws_iam_instance_profile.bootstrap.name}"
+
+    root_block_device {
+      volume_type           = "standard"
+      volume_size           = "10"
+      delete_on_termination = "true"
+    }
+
+    availability_zone = "${aws_subnet.home_misc1.availability_zone}"
+    subnet_id         = "${aws_subnet.home_misc1.id}"
+
+    user_data = "${data.template_file.bootstrap_user_data.rendered}"
+  }
+
+  depends_on = [
+    "aws_efs_mount_target.bootstrap1",
+    "aws_efs_mount_target.bootstrap2"
+  ]
 }

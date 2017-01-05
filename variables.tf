@@ -40,3 +40,21 @@ variable "ssh_key" {
   type        = "string"
   description = "The SSH public key to use for SSHing into EC2 instances."
 }
+
+variable "bootstrap_spot" {
+  type        = "string"
+  description = "Defaults to false.  Set to true to use a spot fleet to maintain the bootstrap server, instead of an auto-scaling group."
+  default     = "false"
+}
+
+variable "bootstrap_spot_price" {
+  type        = "string"
+  description = "If bootstrap_spot is true, this is the maximum spot price.  This should be set to something less than the hourly price of an on-demand t2.small instance."
+  default     = "0.02"
+}
+
+variable "bootstrap_spot_expiration" {
+  type        = "string"
+  description = "A date/time, in YYYY-MM-DDTHH:MM:SSZ format, marking the end point of the spot request.  This needs to be moved forward regularly."
+  default     = "2018-01-04T00:00:00Z"
+}
