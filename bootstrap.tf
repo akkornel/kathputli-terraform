@@ -3,7 +3,7 @@
 # Create a role for the bootstrap system, and link the role to the policy.
 
 resource "aws_iam_role" "bootstrap" {
-  name = "Bootstrap"
+  name_prefix        = "Bootstrap"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -21,10 +21,9 @@ EOF
 }
 
 # Attach a policy to the role, allowing everything.
-
 resource "aws_iam_role_policy" "bootstrap" {
-  name = "Bootstrap"
-  role = "${aws_iam_role.bootstrap.id}"
+  name_prefix = "Bootstrap"
+  role        = "${aws_iam_role.bootstrap.id}"
   policy = <<EOF
 {
   "Version": "2012-10-17",
