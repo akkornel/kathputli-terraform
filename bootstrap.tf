@@ -118,11 +118,11 @@ EOF
 }
 
 # Create an auto-scaling group to maintain one bootstrap server
-resource "aws_autoscaling_group" "Bootstrap" {
-  name         = "Bootstrap"
-  min_size     = "1"
-  max_size     = "1"
-  force_delete = "true"
+resource "aws_autoscaling_group" "bootstrap" {
+  min_size         = "1"
+  desired_capacity = "1"
+  max_size         = "1"
+  force_delete     = "true"
 
   launch_configuration = "${aws_launch_configuration.bootstrap.id}"
   vpc_zone_identifier  = [
