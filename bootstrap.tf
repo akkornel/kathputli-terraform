@@ -83,9 +83,9 @@ resource "aws_launch_configuration" "bootstrap" {
 
 # Create an auto-scaling group to maintain one bootstrap server
 resource "aws_autoscaling_group" "bootstrap" {
-  min_size         = "1"
-  desired_capacity = "1"
-  max_size         = "1"
+  min_size         = "${var.bootstrap_spot == "false" ? 1 : 0}"
+  desired_capacity = "${var.bootstrap_spot == "false" ? 1 : 0}"
+  max_size         = "${var.bootstrap_spot == "false" ? 1 : 0}"
   force_delete     = "true"
 
   launch_configuration = "${aws_launch_configuration.bootstrap.id}"
