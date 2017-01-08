@@ -7,7 +7,7 @@
 # quickly, but message retention time is two weeks, in case the bootstrap 
 # instance is deleted and nobody notices for a while.
 resource "aws_sqs_queue" "bootstrap" {
-  name       = "bootstrap"
+  name       = "bootstrap.fifo"
   fifo_queue = "true"
 
   max_message_size = "65536"
