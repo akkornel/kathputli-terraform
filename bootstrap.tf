@@ -117,7 +117,7 @@ resource "aws_autoscaling_group" "bootstrap" {
 
 # Create a role for the Spot Fleet service to assume.
 resource "aws_iam_role" "bootstrap_fleet" {
-  name_prefix        = "Bootstrap"
+  name_prefix        = "BootstrapFleet"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
