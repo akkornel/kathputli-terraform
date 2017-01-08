@@ -8,7 +8,7 @@ data "template_file" "bootstrap_user_data" {
   vars {
     admin_email   = "${var.admin_email}"
     home_bucket   = "${aws_s3_bucket.puppet_config_home.bucket}"
-    remote_bucket = "${var.remote_region == "none" ? "none" : "${var.bucket_prefix}"}"
+    remote_bucket = "${var.remote_region == "none" ? "none" : "${var.bucket_prefix}-config-remote"}"
     dns_name      = "${var.domain}"
     dns_id        = "${aws_route53_zone.puppet_zone.id}"
     efs_id        = "${aws_efs_file_system.bootstrap.id}"
