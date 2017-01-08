@@ -45,10 +45,10 @@ REMOTE_BUCKET="$${remote_bucket}"
 DNS_ZONE_ID="$${dns_id}"
 DNS_ZONE_NAME="$${dns_name}"
 EFS_ID="$${efs_id}"
-BOOTSTRAP_ARN="$${sqs_id}"
-BOOTSTRAP_URL="$${sqs_url}"
-BUILDER_ARN="$${sqs_id}"
-BUILDER_URL="$${sqs_url}"
+BOOTSTRAP_ARN="$${bootstrap_arn}"
+BOOTSTRAP_URL="$${bootstrap_url}"
+BUILDER_ARN="$${builder_arn}"
+BUILDER_URL="$${builder_url}"
 EOF
 
 # Uppgrade existing packages, and install Git & GPG
