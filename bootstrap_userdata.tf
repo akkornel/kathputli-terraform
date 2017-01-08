@@ -12,6 +12,10 @@ data "template_file" "bootstrap_user_data" {
     dns_name      = "${var.domain}"
     dns_id        = "${aws_route53_zone.puppet_zone.id}"
     efs_id        = "${aws_efs_file_system.bootstrap.id}"
+    bootstrap_arn = "${aws_sqs_queue.bootstrap.arn}"
+    bootstrap_url = "${aws_sqs_queue.bootstrap.id}"
+    builder_arn   = "${aws_sqs_queue.builder.arn}"
+    builder_url   = "${aws_sqs_queue.builder.id}"
   }
 
   template = <<ENDUSERDATA
@@ -27,7 +31,11 @@ cat - <<EOF > /etc/kathputli-bootstrap.json
     "id": "$${dns_id}",
     "name": "$${dns_name}",
   },
-  "efs_id": "$${efs_id}"
+  "efs_id": "$${efs_id}",
+  "bootstrap_arn": "$${bootstrap_arn}",
+  "bootstrap_url": "$${bootstrap_url}"
+  "builder_arn": "$${builder_arn}",
+  "builder_url": "$${builder_url}"
 }
 EOF
 cat - <<EOF > /etc/kathputli-bootstrap.sh
@@ -37,6 +45,10 @@ REMOTE_BUCKET="$${remote_bucket}"
 DNS_ZONE_ID="$${dns_id}"
 DNS_ZONE_NAME="$${dns_name}"
 EFS_ID="$${efs_id}"
+BOOTSTRAP_ARN="$${sqs_id}"
+BOOTSTRAP_URL="$${sqs_url}"
+BUILDER_ARN="$${sqs_id}"
+BUILDER_URL="$${sqs_url}"
 EOF
 
 # Uppgrade existing packages, and install Git & GPG
