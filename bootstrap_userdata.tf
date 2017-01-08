@@ -29,7 +29,7 @@ cat - <<EOF > /etc/kathputli-bootstrap.json
   "remote_bucket": "$${remote_bucket}",
   "dns_zone": {
     "id": "$${dns_id}",
-    "name": "$${dns_name}",
+    "name": "$${dns_name}"
   },
   "efs_id": "$${efs_id}",
   "bootstrap_arn": "$${bootstrap_arn}",
