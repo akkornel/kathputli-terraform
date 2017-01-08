@@ -61,7 +61,7 @@ resource "aws_iam_instance_profile" "bootstrap" {
 # This config defines an Ubuntu Xenial system, to which we fetch, verify, and 
 # run a script that performs the remaining bootstrap tasks.
 resource "aws_launch_configuration" "bootstrap" {
-  name              = "Bootstrap"
+  name_prefix       = "Bootstrap"
   instance_type     = "t2.small"
   placement_tenancy = "default"
   image_id          = "${var.bootstrap_ami[var.home_region]}"
