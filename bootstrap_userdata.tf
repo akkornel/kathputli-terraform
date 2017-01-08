@@ -32,10 +32,14 @@ cat - <<EOF > /etc/kathputli-bootstrap.json
     "name": "$${dns_name}"
   },
   "efs_id": "$${efs_id}",
-  "bootstrap_arn": "$${bootstrap_arn}",
-  "bootstrap_url": "$${bootstrap_url}"
-  "builder_arn": "$${builder_arn}",
-  "builder_url": "$${builder_url}"
+  "bootstrap_queue": {
+    "arn": "$${bootstrap_arn}",
+    "url": "$${bootstrap_url}"
+  },
+  "builder_queue": {
+    "arn": "$${builder_arn}",
+    "url": "$${builder_url}"
+  }
 }
 EOF
 cat - <<EOF > /etc/kathputli-bootstrap.sh
