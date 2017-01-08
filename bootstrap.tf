@@ -149,7 +149,9 @@ resource "aws_spot_fleet_request" "bootstrap" {
 
   target_capacity = 1
   spot_price      = "${var.bootstrap_spot_price}"
-  valid_until     = "${var.bootstrap_spot_expiration}"
+
+  valid_until                         = "${var.bootstrap_spot_expiration}"
+  terminate_instances_with_expiration = "true"
 
 # Once fixed, will later need to add m3.large,r3.large,r4.large,c3.large
 # Also subnet ${aws_subnet.home_misc2.id}
