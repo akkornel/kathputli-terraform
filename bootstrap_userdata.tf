@@ -24,7 +24,11 @@ data "template_file" "bootstrap_user_data" {
   template = <<ENDUSERDATA
 #!/bin/bash
 
+# Send stdout and stderr to a local file
+exec 1>/tmp/user-data.log 2>&1
+
 # Create files with info on our config
+echo "Writing out config files"
 cat - <<EOF > /etc/kathputli-bootstrap.json
 {
   "admin_email": "$${admin_email}",
@@ -69,21 +73,27 @@ BOOTSTRAP_TAG="$${bootstrap_tag}"
 EOF
 
 # Uppgrade existing packages, and install Git & GPG
+echo ; echo "Updating package list"
 apt-get update
+echo ; echo "Upgrading installed packages"
 DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+echo ; echo "Installing packages needed for bootstrap"
 DEBIAN_FRONTEND=noninteractive apt-get install -y git gnupg gnupg-curl
 
 # Fetch the bootstrap signing key
+echo ; echo "Fetching and trusting signing key ($${gpg_key_id})"
 sudo -u ubuntu gpg --keyserver keys.gnupg.net --recv-keys $${gpg_key_id}
 echo 'trusted-key $${gpg_key_id}' >> ~/.gnupg/gpg.conf
 sudo -u ubuntu gpg --update-trustdb
 
 # Fetch, verify, and run the bootstrap
+echo ; echo "Fetching bootstrap code from $${bootstrap_git}:$${bootstrap_tag}"
 cd ~ubuntu
 sudo -u ubuntu git clone $${bootstrap_git} kathputli-bootstrap
 cd kathputli-bootstrap
 sudo -u ubuntu git tag -v $${bootstrap_tag} >> /tmp/bootstrap_tag.txt || exit 1
 sudo -u ubuntu git checkout production
+echo ; echo "Running bootstrap!"
 exec ~ubuntu/kathputli-bootstrap/bootstrap.sh
 ENDUSERDATA
 }
