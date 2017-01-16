@@ -61,6 +61,18 @@ variable "bootstrap_spot_expiration" {
 
 variable "gpg_key" {
   type        = "string"
-  description = "The long key ID (that is, the last 16 hex characters) for the GPG key that we will use to verify the software we download."
+  description = "The long key ID (that is, the last 16 hex characters) for the GPG key that we will use to verify the software we download.  The key must be present in (at least) the pgp.net key servers."
   default     = "A2BF8503E5E5AFC8"
+}
+
+variable "bootstrap_repo" {
+  type        = "string"
+  description = "The URL of the Git repository containing the bootstrap code.  This may be any valid URL, so long as authentication is NOT needed to clone."
+  default     = "https://github.com/akkornel/kathputli-bootstrap.git"
+}
+
+variable "bootstrap_tag" {
+  type        = "string"
+  description = "The name of the tag to check out from bootstrap_repo.  This tag MUST be signed by the key specified in gpg_key."
+  default     = "production"
 }

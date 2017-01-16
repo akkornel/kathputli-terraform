@@ -17,6 +17,8 @@ data "template_file" "bootstrap_user_data" {
     builder_arn   = "${aws_sqs_queue.builder.arn}"
     builder_url   = "${aws_sqs_queue.builder.id}"
     gpg_key_id    = "${var.gpg_key}"
+    bootstrap_git = "${var.bootstrap_repo}"
+    bootstrap_tag = "${var.bootstrap_tag}"
   }
 
   template = <<ENDUSERDATA
@@ -41,7 +43,13 @@ cat - <<EOF > /etc/kathputli-bootstrap.json
     "arn": "$${builder_arn}",
     "url": "$${builder_url}"
   },
-  "gpg_key_id": "$${gpg_key_id}"
+  "gpg_key_id": "$${gpg_key_id}",
+  "git_sources": {
+    "bootstrap": {
+      "url": "$${bootstrap_git}",
+      "tag": "$${bootstrap_tag}"
+    }
+  }
 }
 EOF
 cat - <<EOF > /etc/kathputli-bootstrap.sh
@@ -56,6 +64,8 @@ BOOTSTRAP_URL="$${bootstrap_url}"
 BUILDER_ARN="$${builder_arn}"
 BUILDER_URL="$${builder_url}"
 GPG_KEY_ID="$${gpg_key_id}"
+BOOTSTRAP_REPO="$${bootstrap_git}"
+BOOTSTRAP_TAG="$${bootstrap_tag}"
 EOF
 
 # Uppgrade existing packages, and install Git & GPG
@@ -70,9 +80,9 @@ sudo -u ubuntu gpg --update-trustdb
 
 # Fetch, verify, and run the bootstrap
 cd ~ubuntu
-sudo -u ubuntu git clone https://github.com/akkornel/kathputli-bootstrap.git
+sudo -u ubuntu git clone $${bootstrap_git} kathputli-bootstrap
 cd kathputli-bootstrap
-sudo -u ubuntu git tag -v production >> /tmp/bootstrap_tag.txt || exit 1
+sudo -u ubuntu git tag -v $${bootstrap_tag} >> /tmp/bootstrap_tag.txt || exit 1
 sudo -u ubuntu git checkout production
 exec ~ubuntu/kathputli-bootstrap/bootstrap.sh
 ENDUSERDATA
