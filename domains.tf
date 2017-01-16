@@ -10,4 +10,6 @@
 
 resource "aws_route53_zone" "puppet_zone" {
   name = "${var.domain}"
+
+  force_destroy = "true"
 }

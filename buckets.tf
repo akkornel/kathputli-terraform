@@ -13,6 +13,8 @@ resource "aws_s3_bucket" "puppet_config_home" {
   bucket = "${var.bucket_prefix}-config-home"
   region = "${var.home_region}"
 
+  force_destroy = "true"
+
   acl = "private"
 
   versioning {
@@ -29,6 +31,8 @@ resource "aws_s3_bucket" "puppet_config_remote" {
   provider = "aws.remote_provider"
   region   = "${var.remote_region}"
   count    = "${var.remote_region == "none" ? 0 : 1}"
+
+  force_destroy = "true"
 
   acl      = "private"
 
