@@ -16,6 +16,7 @@ data "template_file" "bootstrap_user_data" {
     bootstrap_url = "${aws_sqs_queue.bootstrap.id}"
     builder_arn   = "${aws_sqs_queue.builder.arn}"
     builder_url   = "${aws_sqs_queue.builder.id}"
+    gpg_key_id    = "${var.gpg_key}"
   }
 
   template = <<ENDUSERDATA
@@ -39,7 +40,8 @@ cat - <<EOF > /etc/kathputli-bootstrap.json
   "builder_queue": {
     "arn": "$${builder_arn}",
     "url": "$${builder_url}"
-  }
+  },
+  "gpg_key_id": "$${gpg_key_id}"
 }
 EOF
 cat - <<EOF > /etc/kathputli-bootstrap.sh
@@ -53,6 +55,7 @@ BOOTSTRAP_ARN="$${bootstrap_arn}"
 BOOTSTRAP_URL="$${bootstrap_url}"
 BUILDER_ARN="$${builder_arn}"
 BUILDER_URL="$${builder_url}"
+GPG_KEY_ID="$${gpg_key_id}"
 EOF
 
 # Uppgrade existing packages, and install Git & GPG
@@ -61,8 +64,8 @@ DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 DEBIAN_FRONTEND=noninteractive apt-get install -y git gnupg gnupg-curl
 
 # Fetch the bootstrap signing key
-sudo -u ubuntu gpg --keyserver keys.gnupg.net --recv-keys FC411D5BA332BE922D2CE7F1A2BF8503E5E5AFC8
-echo 'trusted-key A2BF8503E5E5AFC8' >> ~/.gnupg/gpg.conf
+sudo -u ubuntu gpg --keyserver keys.gnupg.net --recv-keys $${gpg_key_id}
+echo 'trusted-key $${gpg_key_id}' >> ~/.gnupg/gpg.conf
 sudo -u ubuntu gpg --update-trustdb
 
 # Fetch, verify, and run the bootstrap

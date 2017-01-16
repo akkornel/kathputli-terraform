@@ -58,3 +58,9 @@ variable "bootstrap_spot_expiration" {
   description = "A date/time, in YYYY-MM-DDTHH:MM:SSZ format, marking the end point of the spot request.  This needs to be moved forward regularly."
   default     = "2018-01-04T00:00:00Z"
 }
+
+variable "gpg_key" {
+  type        = "string"
+  description = "The long key ID (that is, the last 16 hex characters) for the GPG key that we will use to verify the software we download."
+  default     = "A2BF8503E5E5AFC8"
+}
