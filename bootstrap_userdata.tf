@@ -94,6 +94,7 @@ cd kathputli-bootstrap
 sudo -u ubuntu git tag -v $${bootstrap_tag} >> /tmp/bootstrap_tag.txt || exit 1
 sudo -u ubuntu git checkout production
 echo ; echo "Running bootstrap!"
-exec ~ubuntu/kathputli-bootstrap/bootstrap.sh
+cd ~ubuntu/kathputli-bootstrap
+exec ./bootstrap.sh
 ENDUSERDATA
 }
