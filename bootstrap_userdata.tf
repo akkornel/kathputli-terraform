@@ -76,7 +76,7 @@ EOF
 echo ; echo "Updating package list"
 apt-get update
 echo ; echo "Upgrading installed packages"
-DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
 echo ; echo "Installing packages needed for bootstrap"
 DEBIAN_FRONTEND=noninteractive apt-get install -y git gnupg gnupg-curl
 
