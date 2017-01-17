@@ -88,13 +88,11 @@ gpg --update-trustdb
 
 # Fetch, verify, and run the bootstrap
 echo ; echo "Fetching bootstrap code from $${bootstrap_git}:$${bootstrap_tag}"
-cd ~ubuntu
 git clone $${bootstrap_git} kathputli-bootstrap
 cd kathputli-bootstrap
 git tag -v $${bootstrap_tag} >> /var/log/bootstrap_tag.txt || exit 1
 git checkout production
 echo ; echo "Running bootstrap!"
-cd ~/kathputli-bootstrap
 exec ./bootstrap.sh
 ENDUSERDATA
 }
