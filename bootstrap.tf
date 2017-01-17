@@ -45,7 +45,7 @@ EOF
 # Create an instance profile containing our role, so that it can be attached to 
 # EC2 instances.
 resource "aws_iam_instance_profile" "bootstrap" {
-  name = "Bootstrap"
+  name = "${aws_iam_role.bootstrap.name}"
   roles = [
     "${aws_iam_role.bootstrap.name}"
   ]
