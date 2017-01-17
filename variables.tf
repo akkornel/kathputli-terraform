@@ -68,7 +68,7 @@ variable "gpg_key" {
 variable "bootstrap_repo" {
   type        = "string"
   description = "The URL of the Git repository containing the bootstrap code.  This may be any valid URL, so long as authentication is NOT needed to clone."
-  default     = "https://github.com/akkornel/kathputli-bootstrap.git"
+  default     = "https://github.com/kathputli/bootstrap-aws.git"
 }
 
 variable "bootstrap_tag" {
