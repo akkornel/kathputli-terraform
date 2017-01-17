@@ -25,7 +25,7 @@ data "template_file" "bootstrap_user_data" {
 #!/bin/bash
 
 # Send stdout and stderr to a local file
-exec 1>/tmp/user-data.log 2>&1
+exec 1>/var/log/user-data.log 2>&1
 
 # Create files with info on our config
 echo "Writing out config files"
@@ -91,7 +91,7 @@ echo ; echo "Fetching bootstrap code from $${bootstrap_git}:$${bootstrap_tag}"
 cd ~ubuntu
 git clone $${bootstrap_git} kathputli-bootstrap
 cd kathputli-bootstrap
-git tag -v $${bootstrap_tag} >> /tmp/bootstrap_tag.txt || exit 1
+git tag -v $${bootstrap_tag} >> /var/log/bootstrap_tag.txt || exit 1
 git checkout production
 echo ; echo "Running bootstrap!"
 cd ~/kathputli-bootstrap
