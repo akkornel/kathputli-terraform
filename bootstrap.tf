@@ -111,9 +111,9 @@ resource "aws_autoscaling_group" "bootstrap" {
   ]
 }
 
-#
-#
-#
+# Finally, we have the Spot Fleet configuration.  This is an alternative to the
+# Auto-Scaling Group.  Using a spot fleet saves us money, but means that (if
+# the spot price goes too high) we won't have a running Bootstrap instance.
 
 # Create a role for the Spot Fleet service to assume.
 resource "aws_iam_role" "bootstrap_fleet" {
@@ -152,6 +152,9 @@ resource "aws_spot_fleet_request" "bootstrap" {
 
   valid_until                         = "${var.bootstrap_spot_expiration}"
   terminate_instances_with_expiration = "true"
+
+# TODO: It seems like destroying the spot fleet doesn't properly terminate
+# instances.
 
 # Once fixed, will later need to add m3.large,r3.large,r4.large,c3.large
 # Also subnet ${aws_subnet.home_misc2.id}
