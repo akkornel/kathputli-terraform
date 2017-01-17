@@ -82,19 +82,19 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y git gnupg gnupg-curl
 
 # Fetch the bootstrap signing key
 echo ; echo "Fetching and trusting signing key ($${gpg_key_id})"
-sudo -u ubuntu gpg --keyserver keys.gnupg.net --recv-keys $${gpg_key_id}
-echo 'trusted-key $${gpg_key_id}' >> ~ubuntu/.gnupg/gpg.conf
-sudo -u ubuntu gpg --update-trustdb
+gpg --keyserver keys.gnupg.net --recv-keys $${gpg_key_id}
+echo 'trusted-key $${gpg_key_id}' >> ~/.gnupg/gpg.conf
+gpg --update-trustdb
 
 # Fetch, verify, and run the bootstrap
 echo ; echo "Fetching bootstrap code from $${bootstrap_git}:$${bootstrap_tag}"
 cd ~ubuntu
-sudo -u ubuntu git clone $${bootstrap_git} kathputli-bootstrap
+git clone $${bootstrap_git} kathputli-bootstrap
 cd kathputli-bootstrap
-sudo -u ubuntu git tag -v $${bootstrap_tag} >> /tmp/bootstrap_tag.txt || exit 1
-sudo -u ubuntu git checkout production
+git tag -v $${bootstrap_tag} >> /tmp/bootstrap_tag.txt || exit 1
+git checkout production
 echo ; echo "Running bootstrap!"
-cd ~ubuntu/kathputli-bootstrap
+cd ~/kathputli-bootstrap
 exec ./bootstrap.sh
 ENDUSERDATA
 }
