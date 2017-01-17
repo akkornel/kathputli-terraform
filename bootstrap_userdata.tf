@@ -83,7 +83,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y git gnupg gnupg-curl
 # Fetch the bootstrap signing key
 echo ; echo "Fetching and trusting signing key ($${gpg_key_id})"
 sudo -u ubuntu gpg --keyserver keys.gnupg.net --recv-keys $${gpg_key_id}
-echo 'trusted-key $${gpg_key_id}' >> ~/.gnupg/gpg.conf
+echo 'trusted-key $${gpg_key_id}' >> ~ubuntu/.gnupg/gpg.conf
 sudo -u ubuntu gpg --update-trustdb
 
 # Fetch, verify, and run the bootstrap
