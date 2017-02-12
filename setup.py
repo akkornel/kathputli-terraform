@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Import core modules
+import re
+
 # Greet the user
 print('''Hello!  This is the Kathputli bootstrap setup assistant!
 
@@ -192,8 +195,39 @@ while 1:
         print('Using region', backup_region, 'as the backup region.')
         terraform_vars['remote_region'] = backup_region
         break
+print('')
 
 # Clean up from region selection
 del valid_regions, valid_list_initialized, region_partition_map
 
 
+# Next we're going to pick a bucket prefix.
+print('''Now you need to pick a prefix name to use for one of two S3 buckets.
+
+Kathputli uses a couple of S3 buckets to store data.  One bucket is used to
+store stuff in the primary region, and another bucket is used to store stuff in
+the backup region.
+
+S3 replication will be used to automatically send changes from one region to
+another.
+
+Terraform will generate the actual bucket names; you need to choose a prefix
+that will be used at the start of each bucket's name.
+
+Please limit your prefix to ASCII letters, numbers, and hyphens.
+
+NOTE: Unfortunately, we cannot check if a bucket name is already in use.  So,
+please try to choose a unique name!
+''')
+
+prefix_re = re.compile('^[a-z0-9-]+$', re.I)
+good_bucket_prefix = False
+while not good_bucket_prefix:
+    bucket_prefix = input('Please choose a prefix:')
+    if prefix_re.match(bucket_prefix):
+        good_bucket_prefix = True
+    else:
+        print('Please only use letters, numbers, and hyphens in your prefix')
+        print('')
+print('Using %s as the bucket prefix.' % bucket_prefix)
+terraform_vars['bucket_prefix'] = bucket_prefix
