@@ -17,6 +17,10 @@ Let's get started!
 '''
 )
 
+x = input('(Press return or enter to continue)')
+del x
+print('Here we go!', '', sep="\n")
+
 # Make sure boto3 is available
 try:
     print('First, we\'ll load the software we need to communicate with AWS...')
