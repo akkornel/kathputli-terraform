@@ -74,24 +74,28 @@ region_partition_map = {}
 
 # First, check for regions which have the services we need
 valid_regions = []
-valid_list_initialized = 0
+valid_list_initialized = False
 print('Looking for regions that support: ', sep='', end='')
-for service in ('ec2',):
+for service in ('ec2','s3','sqs','sns','kms','efs'):
     print('[', service, sep='', end='')
     candidates = []
+    # Go through each partition, add add its regions to the candidates list.
     for partition in partitions:
         regions_in_partition = session.get_available_regions(service, 
             partition_name=partition) 
         candidates.extend(regions_in_partition)
+        # Make sure the region-partition mapping is up-to-date
         for region in regions_in_partition:
             region_partition_map[region] = partition
-    if (valid_list_initialized == 0):
+    # If we don't have a list of valid regions, well, now we do!
+    if not valid_list_initialized:
         valid_regions = candidates
-        valid_list_initialized = 1
+        valid_list_initialized = True
     else:
-        for region in valid_regions:
-            if region not in candidates:
-                del valid_regions[valid_regions.index(region)]
+        # If we already had a valid list, then filter out non-candidates.
+        # (A region must be a candidate for every service in order to be valid.)
+        valid_regions[:] = [region for region in valid_regions if region in
+                candidates]
     print(']', end='')
 print("\n")
 
