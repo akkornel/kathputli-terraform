@@ -65,12 +65,12 @@ else:
 print('''Now we can actually get started!
 ''')
 
+# Our needs: EC2, three AZs, SQS, KMS, EFS, SNS
+
 # Get list of valid partitions
 print('Fetching list of partitions.')
 partitions = session.get_available_partitions()
 region_partition_map = {}
-
-# Our needs: EC2, three AZs, SQS, KMS, EFS, SNS
 
 # First, check for regions which have the services we need
 valid_regions = []
@@ -95,8 +95,9 @@ for service in ('ec2',):
     print(']', end='')
 print("\n")
 
+# Next, check for at least three AZs that are currently good.
 print('Filtering out regions with less than three usable AZs:')
-for region in valid_regions:
+def region_has_3az(region):
     print(region, ': ', sep='', end='')
     try:
         client = session.client('ec2', region_name=region)
@@ -107,17 +108,19 @@ for region in valid_regions:
     except botocore.exceptions.ClientError:
         print('BAD: Unable to fetch AZ list.  '
               'Maybe you can\'t access this partition?')
-        del valid_regions[valid_regions.index(region)]
-        next
+        return False
     else:
         if (len(az_list) < 3):
             print('BAD: Only available AZs are', [az['ZoneName'] for az in az_list])
-            del valid_regions[valid_regions.index(region)]
+            return False
         else:
             print('OK,', len(az_list), 'AZs')
+            return True
+valid_regions[:] = [region for region in valid_regions if
+        region_has_3az(region)]
 print('')
 
-# Now, valid_regions is an array of valid regions!
+# Finally, valid_regions is an array of valid regions!
 # Let's find out which region should be the primary region.
 # Once chosen, remove it from the list of valid regions.
 print('The following regions are available for bootstrapping:')
