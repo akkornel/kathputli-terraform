@@ -45,6 +45,7 @@ try:
     print('Next, we\'ll see if we have valid AWS credentials...')
     s3 = session.client('s3', region_name='us-east-1')
     buckets = s3.list_buckets()
+    del s3, buckets
 except botocore.exceptions.NoCredentialsError:
     print('It appears that you don\'t have any AWS credentials loaded.',
           '(At least, not where we can find them!)',
