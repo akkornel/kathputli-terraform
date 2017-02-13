@@ -236,3 +236,43 @@ while not good_bucket_prefix:
         print('')
 print('Using %s as the bucket prefix.' % bucket_prefix)
 terraform_vars['bucket_prefix'] = bucket_prefix
+
+
+# Show the user their selections, get confirmation, then write it out
+
+# Show selections and get confirmation
+print('Let\'s take a moment to review your selections before we finish.',
+      '',
+      'Here is what you selected:',
+      "\tPrimary Region: %s\n\tBackup Region: %s" % (
+      terraform_vars['home_region'], terraform_vars['remote_region']),
+      "\tS3 Bucket Prefix: %s" % terraform_vars['bucket_prefix'],
+      '',
+      sep="\n")
+input('(Press enter or return to continue, or Control-C to exit)')
+print('')
+
+# Check for terraform.tfvars
+try:
+    tfvars = open('terraform.tfvars', mode='wt', encoding='ascii')
+except OSError:
+    print('There was a problem opening the file "terraform.tfvars" '
+          'for writing.  So, you have a choice:',
+          '* To close the program, type Control-C',
+          '* To print out what we _would_ have written, press enter.',
+          sep="\n")
+    input('')
+    print('OK, we will now output what we would have written to the file '
+          '"terraform.tfvars".  You will need to create and populate this file '
+          'yourself.  It should be in the same location as this script.',
+          'FILE BEGINS HERE',
+          sep="\n")
+    tfvars = sys.stdout
+else:
+    print('Opened terraform.tfvars for writing')
+
+# Send out the config!
+# Still need domain, admin_email, ssh_key, and bootstrap_spot
+for key in ('home_region', 'remote_region', 'bucket_prefix'):
+    print('%s = "%s"' % (key, terraform_vars[key]),
+        file=tfvars)
